@@ -50,7 +50,7 @@ public class SecurityConfig {
 
         configuration.setAllowedOriginPatterns(Arrays.asList(
                 "https://*.netlify.app",
-                "https://mon-app-taskmanager.netlify.app",
+                "https://taskmanager.netlify.app",
                 "http://localhost:5173",
                 "http://localhost:5432",
                 "http://localhost",
