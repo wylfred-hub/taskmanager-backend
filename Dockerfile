@@ -19,7 +19,7 @@
 #ENTRYPOINT ["java","-jar","taskmanager.jar"]
 
 # Étape 1 : Build de l'application avec Java 25
-FROM openjdk:25-jdk-slim AS build
+FROM maven:3.9.16-eclipse-temurin-25-alpine AS build
 WORKDIR /app
 
 COPY .mvn/ .mvn
@@ -30,7 +30,7 @@ COPY src ./src
 RUN ./mvnw package -DskipTests
 
 # Étape 2 : Exécution de l'application avec Java 25
-FROM openjdk:25-jdk-slim
+FROM eclipse-temurin:25-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/taskmanager-0.0.1-SNAPSHOT.jar taskmanager.jar
 
