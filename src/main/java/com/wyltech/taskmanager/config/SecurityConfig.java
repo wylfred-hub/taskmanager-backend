@@ -1,10 +1,12 @@
-package com.example.taskmanager.config; // Adaptez le package selon votre projet
+package com.wyltech.taskmanager.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -20,10 +22,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults()) // Active la configuration CORS ci-dessous
-                .csrf(csrf -> csrf.disable()) // À adapter selon le besoin (ex: désactivé pour API stateless JWT)
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**", "/public/**").permitAll() // Vos routes publiques
+                        .requestMatchers("/api/v1/auth/**", "/public/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
@@ -31,23 +33,25 @@ public class SecurityConfig {
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // 1. Origines autorisées : Netlify, Localhost et Mobile/Capacitor
         configuration.setAllowedOriginPatterns(Arrays.asList(
-                "https://*.netlify.app",               // Tous vos sous-domaines Netlify
-                "https://mon-app-taskmanager.netlify.app", // L'URL exacte de votre site Netlify
-                "http://localhost:5173",               // Vite React en local
+                "https://*.netlify.app",
+                "https://mon-app-taskmanager.netlify.app",
+                "http://localhost:5173",
                 "http://localhost:5432",
-                "http://localhost",                    // Capacitor sur Android
-                "capacitor://localhost"               // Capacitor schéma natif
+                "http://localhost",
+                "capacitor://localhost"
         ));
 
-        // 2. Méthodes HTTP autorisées
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 
-        // 3. En-têtes (Headers) autorisés
         configuration.setAllowedHeaders(Arrays.asList(
                 "Authorization",
                 "Content-Type",
@@ -58,14 +62,11 @@ public class SecurityConfig {
                 "Access-Control-Request-Headers"
         ));
 
-        // 4. Autoriser l'envoi de cookies ou d'en-têtes d'authentification si nécessaire
         configuration.setAllowCredentials(true);
-
-        // 5. Exposer les en-têtes nécessaires (ex: tokens JWT)
         configuration.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Appliquer à toutes les routes
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
