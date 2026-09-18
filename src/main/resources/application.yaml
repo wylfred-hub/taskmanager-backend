@@ -1,33 +1,17 @@
+server:
+  port: ${PORT:9090}
 
 spring:
-  application:
-    name: hotel-service
-
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/taskmanager_db
-#    username: root
-#    password:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
   datasource:
-    url=${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/taskmanager_db}
-    username=${SPRING_DATASOURCE_USERNAME:postgres}
-    password=${SPRING_DATASOURCE_PASSWORD:kdua-*4LW&9v4M7}
-    driver-class-name=org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=require
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
 
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        format_sql: true
   jpa:
     hibernate:
-      ddl-auto=update
+      ddl-auto: update
     properties:
       hibernate:
-        dialect=org.hibernate.dialect.PostgreSQLDialect
-
-server:
-  address: 0.0.0.0
-  port: 9090
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
