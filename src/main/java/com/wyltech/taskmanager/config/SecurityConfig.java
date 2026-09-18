@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**", "/public/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/public/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
@@ -51,6 +51,7 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(Arrays.asList(
                 "https://*.netlify.app",
                 "https://taskmanager.netlify.app",
+                "https://taskmanager-backend-xabo.onrender.com",
                 "http://localhost:5173",
                 "http://localhost:5432",
                 "http://localhost",
